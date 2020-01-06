@@ -2,34 +2,27 @@ package com.example.kangdong;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<String> list;
-    private ListView listView;
-    public EditText edt_find, editText, edt_price;
-    private SearchAdapter searchAdapter;
-    private ArrayList<String> arrayList;
-    DBHelper dbHelper;
-    SQLiteDatabase sqlDB;
+    private SQLiteDatabase sqlDB;
+    private DBHelper dbHelper;
+    private TextView textView, textView2, textResult;
+    private EditText edt_find, edt_text, edt_price;
+    private Cursor cursor;
 
 
-    Button bt_input, bt_delete, bt_change;
+    Button bt_input, bt_delete, bt_change ,bt_serch, bt_check;
 
 
     @Override
@@ -39,111 +32,133 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
+
+        textView = (TextView)findViewById(R.id.textView);
+        textView2 = (TextView)findViewById(R.id.textView2);
+        textResult = (TextView)findViewById(R.id.textResult);
 
         bt_input = (Button)findViewById(R.id.Bt_input);
         bt_delete = (Button)findViewById(R.id.Bt_delete);
+        bt_serch = (Button)findViewById(R.id.Bt_serch);
+        bt_check = (Button)findViewById(R.id.Bt_check);
         bt_change = (Button)findViewById(R.id.Bt_change);
 
+        edt_price = (EditText)findViewById(R.id.edt_price);
+        edt_text = (EditText)findViewById(R.id.edt_name);
+        edt_find = (EditText)findViewById(R.id.edt_find);
+
+        //추가
         bt_input.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editText.getText().toString().length()>0 && edt_price.getText().toString().length()>0) {
 
+                try{
                     sqlDB = dbHelper.getWritableDatabase();
-                    sqlDB.execSQL("INSERT INTO groupTB VALUES('"+ editText.getText().toString()+ "' ,"+edt_price.getText().toString()+" );");
+                    if(edt_text.getText().toString().length()>0 && edt_price.getText().toString().length()>0) {
 
+                        sqlDB.execSQL("INSERT INTO KTB VALUES('"+edt_text.getText().toString()+"',"
+                                +edt_price.getText().toString()+");");
+
+                        Toast.makeText(getApplicationContext(),"입력완료",Toast.LENGTH_SHORT).show();
+
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"상품명 또는 가격을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    }
+                }catch (android.database.sqlite.SQLiteConstraintException e){
+                    Toast.makeText(getApplicationContext(),"중복된 상품명이 있습니다.",Toast.LENGTH_SHORT).show();
+                }catch (java.lang.NullPointerException e){
+                    Toast.makeText(getApplicationContext(),"상품명을 입력해 주세요.",Toast.LENGTH_SHORT).show();
+                }finally {
                     sqlDB.close();
-
-                    Toast.makeText(getApplicationContext(),"입력됨", Toast.LENGTH_SHORT).show();
-
-
                 }
+                bt_check.callOnClick();
             }
         });
-
+        // 수정
         bt_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    if(edt_text.getText().toString().length()>0 && edt_price.getText().toString().length()>0){
+                        sqlDB = dbHelper.getWritableDatabase();
+                        sqlDB.execSQL("UPDATE KTB SET kPrice ='"+edt_price.getText().toString()+"' WHERE kName = '"+edt_text.getText().toString()+"';");
+
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"변경 값을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    }
+                }finally {
+                    sqlDB.close();
+                }
+                bt_check.callOnClick();
+            }
+        });
+        //삭제
+        bt_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    sqlDB = dbHelper.getWritableDatabase();
+                    sqlDB.execSQL("DELETE FROM KTB WHERE kName ='"+edt_text.getText().toString()+"';");
+                    Toast.makeText(getApplicationContext(),"삭제 되었습니다",Toast.LENGTH_SHORT).show();
+                }
+                finally {
+                    sqlDB.close();
+                }
+                bt_check.callOnClick();
+            }
+        });
+        //조회
+        bt_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try{
+                    sqlDB = dbHelper.getReadableDatabase();
+                    cursor = sqlDB.rawQuery("SELECT * FROM KTB ORDER BY kName",null);
+
+                    String name = "상품 이름" + "\r\n" + "------------" + "\r\n";
+                    String price = "가격" + "\r\n" + "------------" + "\r\n";
+
+                    while (cursor.moveToNext()){
+                        name += cursor.getString(0) + "\r\n";
+                        price += cursor.getString(1) + " 원" + "\r\n";
+                    }
+
+                    textView.setText(name);
+                    textView2.setText(price);
+                }
+                finally {
+                    cursor.close();
+                    sqlDB.close();
+                }
+
+
+            }
+        });
+        //검색
+        bt_serch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 sqlDB = dbHelper.getReadableDatabase();
+                cursor = sqlDB.rawQuery("SELECT * FROM KTB WHERE kName = '"+edt_find.getText().toString()+"';",null);
 
-                Cursor cursor;
-                cursor = sqlDB.rawQuery("SELECT * FROM groupTB;",null);
+                String result = "";
 
-                String name ="";
-                String price ="";
-
-                while (cursor.moveToNext()){
-                    arrayList.add(cursor.getString(0)+"        " + cursor.getString(1)+ "원");
-                    //arrayList.add(cursor.getString(1));
-
-
+                while (cursor.moveToNext()) {
+                    result = cursor.getString(0) +"     "+ cursor.getString(1) + " 원";
                 }
 
-                //arrayList.add(name + "     :     " + price + "  원");
-                arrayAdapter.notifyDataSetChanged();
+                textResult.setText(result);
 
-                sqlDB.close();
+
                 cursor.close();
+                sqlDB.close();
             }
         });
 
-
-        edt_price = (EditText)findViewById(R.id.edt_price);
-        editText = (EditText)findViewById(R.id.edt_name);
-        edt_find = (EditText)findViewById(R.id.edt_find);
-
-        listView = (ListView)findViewById(R.id.listView);
-
-        list = new ArrayList<String>();
-
-        arrayList = new ArrayList<String>();
-        arrayList.addAll(list);
-
-        searchAdapter = new SearchAdapter(list,this);
-
-        listView.setAdapter(searchAdapter);
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String text = edt_find.getText().toString();
-                search(text);
-            }
-        });
-
-
     }
 
-
-
-    public void search(String charText){
-        list.clear();
-
-        if(charText.length() == 0){
-            list.addAll(arrayList);
-        }
-        else
-        {
-            for(int i = 0; i<arrayList.size(); i++)
-            {
-                if(arrayList.get(i).toLowerCase().contains(charText))
-                {
-                    list.add(arrayList.get(i));
-                }
-            }
-        }
-        searchAdapter.notifyDataSetChanged();
-    }
 }

@@ -10,7 +10,8 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="40dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,10 +25,23 @@
         <EditText
             android:id="@+id/edt_find"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8">
         </EditText>
 
+        <Button
+            android:id="@+id/Bt_serch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:layout_marginLeft="10dp"
+            android:text="확인"
+            android:textSize="20dp"
+            android:background="@drawable/button_serch">
+
+        </Button>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +100,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="40dp"
         android:paddingTop="10dp"
-        android:weightSum="0.6">
+        android:weightSum="1">
 
         <Button
             android:id="@+id/Bt_input"
@@ -96,6 +110,17 @@
             android:text="추가"
             android:textSize="20dp"
             android:background="@drawable/button_input">
+
+        </Button>
+
+        <Button
+            android:id="@+id/Bt_change"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_weight="0.2"
+            android:background="@drawable/button_change"
+            android:text="수정"
+            android:textSize="20dp">
 
         </Button>
 
@@ -111,14 +136,16 @@
         </Button>
 
 
+
+
         <Button
-            android:id="@+id/Bt_change"
+            android:id="@+id/Bt_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="수정"
+            android:layout_weight="0.4"
+            android:text="조회"
             android:textSize="20dp"
-            android:background="@drawable/button_change">
+            android:background="@drawable/button_serch">
 
         </Button>
 
@@ -126,23 +153,65 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp">
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:orientation="horizontal">
 
-        <ListView
-            android:id="@+id/listView"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="검색 결과 : "
+            android:textSize="25dp">
+
+        </TextView>
+        <TextView
+            android:id="@+id/textResult"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="#999999"
-            android:dividerHeight="1dp">
+            android:text=" "
+            android:textSize="25dp">
 
-        </ListView>
-
-
+        </TextView>
 
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:paddingTop="20dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="15dp"
+                android:layout_weight="0.6">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:textSize="15dp">
+
+            </TextView>
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
 
 </LinearLayout>
