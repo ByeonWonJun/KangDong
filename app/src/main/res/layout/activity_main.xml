@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,6 +19,7 @@
             android:layout_height="wrap_content"
             android:text="검색: "
             android:textSize="20dp"
+            android:textColor="#ffffff"
             >
 
         </TextView>
@@ -26,7 +28,8 @@
             android:id="@+id/edt_find"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8">
+            android:layout_weight="0.8"
+            android:textColor="#ffffff">
         </EditText>
 
         <Button
@@ -56,6 +59,7 @@
             android:layout_height="wrap_content"
             android:text="품명 : "
             android:textSize="20dp"
+            android:textColor="#ffffff"
             >
 
         </TextView>
@@ -81,6 +85,7 @@
             android:layout_height="wrap_content"
             android:text="가격 : "
             android:textSize="20dp"
+            android:textColor="#ffffff"
             >
 
         </TextView>
@@ -105,7 +110,7 @@
         <Button
             android:id="@+id/Bt_input"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_weight="0.2"
             android:text="추가"
             android:textSize="20dp"
@@ -127,7 +132,7 @@
         <Button
             android:id="@+id/Bt_delete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_weight="0.2"
             android:text="삭제"
             android:textSize="20dp"
@@ -157,19 +162,16 @@
         android:paddingTop="10dp"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="검색 결과 : "
-            android:textSize="25dp">
 
-        </TextView>
         <TextView
             android:id="@+id/textResult"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:gravity="center"
             android:text=" "
-            android:textSize="25dp">
+            android:textSize="25dp"
+            android:textColor="#ffffff">
 
         </TextView>
 
@@ -186,13 +188,16 @@
             android:weightSum="1"
             android:paddingTop="20dp"
             android:paddingRight="20dp"
-            android:paddingLeft="20dp">
+            android:paddingLeft="20dp"
+            >
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="15dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
                 android:layout_weight="0.6">
 
             </TextView>
@@ -202,7 +207,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
-                android:textSize="15dp">
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:textSize="20dp">
 
             </TextView>
 

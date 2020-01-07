@@ -133,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
                     cursor.close();
                     sqlDB.close();
                 }
-
-
             }
         });
         //검색
@@ -142,20 +140,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                sqlDB = dbHelper.getReadableDatabase();
-                cursor = sqlDB.rawQuery("SELECT * FROM KTB WHERE kName = '"+edt_find.getText().toString()+"';",null);
+                try{
+                    sqlDB = dbHelper.getReadableDatabase();
+                    cursor = sqlDB.rawQuery("SELECT * FROM KTB WHERE kName = '"+edt_find.getText().toString()+"';",null);
 
-                String result = "";
+                    String result = "";
 
-                while (cursor.moveToNext()) {
-                    result = cursor.getString(0) +"     "+ cursor.getString(1) + " 원";
+                    while (cursor.moveToNext()) {
+                        result = cursor.getString(0) +"     "+ cursor.getString(1) + " 원";
+                    }
+
+                    textResult.setText(result);
+                }finally {
+                    cursor.close();
+                    sqlDB.close();
                 }
-
-                textResult.setText(result);
-
-
-                cursor.close();
-                sqlDB.close();
             }
         });
 
